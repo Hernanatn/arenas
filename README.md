@@ -24,6 +24,11 @@
 
 ---
 
+## Estado del Proyecto
+
+Esta es la versión Alpha v0.0.1. La funcionalidad principal está implementada y probada con casos básicos y avanzados, pero la librería puede presentar errores y la API puede sufrir cambios sustanciales en el futuro.
+
+
 ## Referencia de la API
 
 #### `Arena(size_t capacidad)`
@@ -52,6 +57,11 @@ Asigna un bloque de memoria de tamaño especificado con alineación personalizad
 
 #### `void liberar()`
 Reinicia el marcador de uso de la arena, haciendo que toda la memoria previamente asignada sea reutilizable. Las páginas adicionales creadas durante el ciclo de vida también se reinician.
+
+## Pruebas
+La librería incluye una suite (aún en progreso) de pruebas implementada con Catch2, que verifica el comportamiento correcto.
+
+Se puede correr el archivo provisto ( [/pruebas/correr_pruebas.exe](/pruebas/pruebas.exe) ) o [compilar las pruebas desde cero](/documentación/Pruebas.md)
 
 ---
 
@@ -103,10 +113,6 @@ int main() {
 
 3. Compatibilidad:
 Requiere un compilador compatible con C++17 o superior.
-
-## Estado del Proyecto
-
-Esta es la versión Alpha v0.0.1. La funcionalidad principal está implementada y probada con casos básicos y avanzados, pero la librería puede presentar errores y la API puede sufrir cambios sustanciales en el futuro.
 
 ## Licencia
 Este proyecto está licenciado bajo CC BY-SA 4.0. Ver el archivo LICENSE para más detalles.
