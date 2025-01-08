@@ -15,16 +15,42 @@ struct Arena{
     Arena(const Arena&) = delete;
     Arena& operator=(const Arena&) = delete;
 
-
     Arena(size_t capacidad);
     ~Arena();
-
+    
+    /** 
+     * @brief Asigna memoria para un objeto del tipo T y asegura el alineamiento.
+     * @tparam T Tipo de objeto a asignar.
+     * @return Puntero a la memoria asignada.
+     */
     template<typename T> T* alocar();
+
+    /** 
+     * @brief Asigna memoria cruda del tamaño y alineamiento dados.
+     * @param tamaño Tamaño de la memoria a asignar en bytes.
+     * @param alineado Alineación de la memoria.
+     * @return Puntero a la memoria asignada.
+     */
     void* alocar(size_t tamaño, size_t alineado);
+    
+    /** 
+     * @brief Resetea la arena, marca la memoria asignada como sobrescribible.
+     */
     void liberar();
 
     private:
+    /** 
+     * @brief Crea una nueva arena (página), dentro de la lista enlazada.
+     * @param capacidad Capacidad de la nueva arena.
+     */
     void nuevaPagina(size_t capacidad);
+
+    /** 
+     * @brief Alinea el tamaño al límite de alineamiento especificado.
+     * @param n Tamaño a alinear.
+     * @param alineado Límite de alineamiento.
+     * @return Tamaño alineado.
+     */
     static size_t alinearMax(size_t n, size_t alineado);
 };
 
