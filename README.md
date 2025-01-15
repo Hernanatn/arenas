@@ -1,6 +1,6 @@
 # Arenas++
 
-`Arenas++` es una librería ligera en C++ diseñada para la asignación eficiente de memoria paginada en contextos de uso intensivo, donde los patrones de asignación y liberación son predecibles. Utiliza el modelo de **"Asignar una vez, liberar una vez"**, simplificando el manejo de memoria y reduciendo la complejidad asociada con múltiples llamadas a `malloc` y `free`.
+`Arenas++` es una librería ligera en C++ diseñada para la asignación eficiente de memoria paginada en contextos de uso intensivo, donde los patrones de asignación y liberación son predecibles. Utiliza el modelo de **"Asignar una vez, liberar una vez"**, simplificando el manejo de memoria y reduciendo la complejidad asociada con múltiples llamadas a `new` y `delete` / `malloc` y `free`.
 
 
 <img src="https://img.shields.io/badge/hecho_por-Ch'aska-253545?style=for-the-badge" alt="hecho_por_Chaska" height="25px"/> <img src="https://img.shields.io/badge/C%2B%2B_17-4549BF?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++" height="25px"/> <a href=https://www.raylib.com>
