@@ -1,0 +1,81 @@
+name: Pruebas
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+
+jobs:
+  construir-y-probar:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+
+    - name: Instalar Ninja
+      run: |
+        choco install ninja
+    
+    - name: Configurar Clang y CMake
+      run: |
+        choco install llvm
+        echo "CMake version: $(cmake --version)"
+        echo "Clang version: $(clang --version)"
+        $env:CC="clang"
+        $env:CXX="clang++"
+
+        $BUILD_DIR="build/win"
+        cmake -S . -B $BUILD_DIR -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++  -DCMAKE_CXX_STANDARD=20 -G "Ninja"
+
+    - name: Compilar
+      run: |
+        $BUILD_DIR="build/win"
+        cmake --build $BUILD_DIR
+
+    - name: Ejecutar Pruebas
+      id: ejecutar_pruebas
+      run: |
+        $BUILD_DIR\correr_pruebas.exe -s
+
+    - name: Publicar Resultados de Pruebas (en caso de fallos)
+      if: failure()
+      run: |
+        echo "Resultados de las pruebas:"
+        type build\Testing\Temporary\LastTest.log
+
+    - name: Actualizar Descripción de PR o Commit
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const testStep = '${{ steps.ejecutar_pruebas.outcome }}';
+          const testOutcome = testStep === 'success' ?
+                              '✔ Todas las pruebas pasaron correctamente.' :
+                              '❌ Las pruebas fallaron.';
+          const comment = `Resultado de las pruebas:\n\n${testOutcome}`;
+          
+          // Actualizar la descripción del pull request si es un PR
+          if (context.payload.pull_request) {
+            await github.rest.pulls.update({
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+              body: (context.payload.pull_request.body || '') + `\n\n${comment}`,
+            });
+          } else {
+            // Agregar un mensaje de estado para commits directos
+            await github.rest.repos.createCommitStatus({
+              ...context.repo,
+              sha: context.sha,
+              state: testOutcome.includes('✔') ? 'success' : 'failure',
+              description: testOutcome,
+              context: 'Resultados de las pruebas',
+            });
+          }

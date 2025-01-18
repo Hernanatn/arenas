@@ -5,7 +5,7 @@
 
 <img src="https://img.shields.io/badge/hecho_por-Ch'aska-253545?style=for-the-badge" alt="hecho_por_Chaska" height="25px"/> <img src="https://img.shields.io/badge/C%2B%2B_17-4549BF?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++" height="25px"/> <a href=https://www.raylib.com>
 
-<img src="https://img.shields.io/badge/pruebas-pasando-darkgreen?style=for-the-badge" alt="pruebas" height="20px"/> <a href=https://github.com/hernanatn/github.com/hernanatn/futbol_fantasia/releases/latest><img src="https://img.shields.io/badge/Versión-0.0.1--alpha-orange?style=for-the-badge" alt="version" height="20px"/></a> <img src="https://img.shields.io/badge/Licencia-CC_BY--NC--ND_4.0-lightgrey?style=for-the-badge" alt="licencia" height="20px"/>
+<img src="https://img.shields.io/badge/pruebas-pasando-darkgreen?style=for-the-badge" alt="pruebas" height="20px"/> <a href=https://github.com/hernanatn/github.com/hernanatn/futbol_fantasia/releases/latest><img src="https://img.shields.io/badge/Versión-0.0.2--alpha-orange?style=for-the-badge" alt="version" height="20px"/></a> <img src="https://img.shields.io/badge/Licencia-CC_BY--NC--ND_4.0-lightgrey?style=for-the-badge" alt="licencia" height="20px"/>
 
 ## Índice
 1. [Introducción](#introducción)

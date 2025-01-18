@@ -190,3 +190,85 @@ TEST_CASE("Prueba de fuga de memoria: Reasignación de memoria", "[Arena][Fugas]
         REQUIRE(nuevaMemoria != memoria1); // Debe ser diferente de la anterior
     }
 }
+
+   class TipoConConstructorPorDefecto {
+    public:
+        int x;
+        double y;
+        TipoConConstructorPorDefecto() : x(0), y(0.0) {}
+    };
+
+    class TipoSinConstructorPorDefecto {
+    public:
+        int x;
+        double y;
+        TipoSinConstructorPorDefecto(int a, double b) : x(a), y(b) {}
+    };
+
+    inline bool operator==(const TipoConConstructorPorDefecto& a, const TipoSinConstructorPorDefecto& b) {
+        return a.x == b.x && a.y == b.y;
+    }
+
+    inline bool operator!=(const TipoConConstructorPorDefecto& a, const TipoSinConstructorPorDefecto& b) {
+        return !(a == b);
+    }
+
+    inline bool operator==(const TipoSinConstructorPorDefecto& a, const TipoConConstructorPorDefecto& b) {
+        return a.x == b.x && a.y == b.y;
+    }
+
+    inline bool operator!=(const TipoSinConstructorPorDefecto& a, const TipoConConstructorPorDefecto& b) {
+        return !(a == b);
+    }
+
+TEST_CASE("Prueba con tipos personalizados", "[Arena][TiposPersonalizados]") {
+    size_t capacidad = 1024;
+    Arena arena(capacidad);
+
+    SECTION("Asignación de tipo con constructor por defecto") {
+        auto* objeto = arena.alocar<TipoConConstructorPorDefecto>();
+        REQUIRE(objeto != nullptr);
+        REQUIRE(reinterpret_cast<uintptr_t>(objeto) % alignof(TipoConConstructorPorDefecto) == 0);
+
+        // Validar valores iniciales
+        REQUIRE(objeto->x == 0);
+        REQUIRE(objeto->y == 0.0);
+    }
+
+    SECTION("Asignación de tipo sin constructor por defecto") {
+        auto* objeto = arena.alocar<TipoSinConstructorPorDefecto>(42, 3.14);
+        REQUIRE(objeto != nullptr);
+        REQUIRE(reinterpret_cast<uintptr_t>(objeto) % alignof(TipoSinConstructorPorDefecto) == 0);
+
+        // Validar valores inicializados
+        REQUIRE(objeto->x == 42);
+        REQUIRE(objeto->y == 3.14);
+    }
+
+    SECTION("Asignación múltiple de tipos personalizados") {
+        auto* objeto1 = arena.alocar<TipoConConstructorPorDefecto>();
+        auto* objeto2 = arena.alocar<TipoSinConstructorPorDefecto>(1, 2.71);
+        REQUIRE(objeto1 != nullptr);
+        REQUIRE(objeto2 != nullptr);
+        REQUIRE(*objeto1 != *objeto2);
+
+        // Validar valores
+        REQUIRE(objeto1->x == 0);
+        REQUIRE(objeto1->y == 0.0);
+        REQUIRE(objeto2->x == 1);
+        REQUIRE(objeto2->y == 2.71);
+    }
+
+    SECTION("Liberar memoria con tipos personalizados") {
+        auto* objeto1 = arena.alocar<TipoConConstructorPorDefecto>();
+        auto* objeto2 = arena.alocar<TipoSinConstructorPorDefecto>(99, 1.23);
+        REQUIRE(objeto1 != nullptr);
+        REQUIRE(objeto2 != nullptr);
+
+        arena.liberar();
+
+        auto* nuevoObjeto = arena.alocar<TipoConConstructorPorDefecto>();
+        REQUIRE(nuevoObjeto != nullptr);
+        REQUIRE(nuevoObjeto == objeto1); // Debe reutilizar la memoria
+    }
+}
