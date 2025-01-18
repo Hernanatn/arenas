@@ -44,7 +44,7 @@ jobs:
     - name: Ejecutar Pruebas
       id: ejecutar_pruebas
       run: |
-        $BUILD_DIR\correr_pruebas.exe -s
+        $BUILD_DIR\pruebas.exe -s
 
     - name: Publicar Resultados de Pruebas (en caso de fallos)
       if: failure()

@@ -214,7 +214,6 @@ void Arena::nuevaPagina(size_t capacidad){
     this->siguiente = vieja;
 }
 
-
 size_t Arena::espacio() const noexcept{
     return capacidad - ocupado;    
 }
