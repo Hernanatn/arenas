@@ -3,7 +3,6 @@
 .secretos
 .cache
 .clangd
-CMakelists.txt
 CMakePresets.json
 vcpkg.json
 vcpkg-configuration.json

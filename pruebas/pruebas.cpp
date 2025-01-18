@@ -3,7 +3,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
-#include <iostream>
 
 TEST_CASE("Prueba de creación y destrucción de una arena", "[Arena]") {
     size_t capacidad = 4096;

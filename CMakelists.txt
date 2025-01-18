@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.14)
+project(arenas++)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+endif()
+
+add_library(arenas++ INTERFACE) 
+target_include_directories(arenas++ INTERFACE fuente)
+
+set(CATCH2_DIR "${CMAKE_SOURCE_DIR}/externos/Catch2")
+add_subdirectory(${CATCH2_DIR} ${CMAKE_BINARY_DIR}/catch2-build)
+
+
+
+enable_testing()
+add_executable(correr_pruebas pruebas/pruebas.cpp)
+target_include_directories(correr_pruebas PRIVATE ${CATCH2_DIR}/src)
+target_link_libraries(correr_pruebas PRIVATE arenas++ Catch2::Catch2WithMain)
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+include(CTest)
