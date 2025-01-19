@@ -36,7 +36,6 @@ TEST_CASE("Prueba de asignación básica en la arena", "[Arena]") {
     }
 }
 
-
 TEST_CASE("Prueba de múltiples asignaciones", "[Arena]") {
     size_t capacidad = 128; // Capacidad pequeña para forzar múltiples páginas
     Arena arena(capacidad);
