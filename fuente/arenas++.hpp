@@ -6,13 +6,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
-
-namespace utiles {
-    namespace genericos {
-        template <typename T>
-        concept con_constructor_por_defecto = std::is_default_constructible_v<T>;
-    }
-}
+#include <conceptos.hpp>
 
 namespace memoria {
 

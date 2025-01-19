@@ -14,6 +14,9 @@ target_include_directories(arenas++ INTERFACE fuente)
 set(CATCH2_DIR "${CMAKE_SOURCE_DIR}/externos/Catch2")
 add_subdirectory(${CATCH2_DIR} ${CMAKE_BINARY_DIR}/catch2-build)
 
+set(UTILES_DIR "${CMAKE_SOURCE_DIR}/externos/utiles.cpp")
+target_include_directories(arenas++ INTERFACE ${UTILES_DIR}/fuente)
+
 
 
 enable_testing()

@@ -12,7 +12,7 @@ while getopts "c" opt; do
     esac
 done
 
-CXX_FLAGS="-I../externos/Catch2/src -I../fuente -std=c++20"
+CXX_FLAGS="-I../externos/Catch2/src -I../externos/utiles.cpp/fuente -I../fuente -std=c++20"
 BUILD_DIR="build/wsl" 
 
 cmake -S . -B $BUILD_DIR -G "Ninja" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS="$CXX_FLAGS"
