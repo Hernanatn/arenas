@@ -7,9 +7,15 @@
 #include <type_traits>
 #include <utility>
 
+namespace utiles {
+    namespace genericos {
+        template <typename T>
+        concept con_constructor_por_defecto = std::is_default_constructible_v<T>;
+    }
+}
 
-template <typename T>
-concept con_constructor_por_defecto = std::is_default_constructible_v<T>;
+namespace memoria {
+
 
 struct Arena{
     private:
@@ -38,7 +44,7 @@ struct Arena{
      * @tparam T Tipo de objeto a asignar, debe proveer constructor por defecto.
      * @return Puntero a la memoria asignada.
      */
-    template<typename T> T* alocar() requires con_constructor_por_defecto<T>;
+    template<typename T> T* alocar() requires utiles::genericos::con_constructor_por_defecto<T>;
 
     /**
     * @brief Asigna memoria para un objeto de tipo T dentro de la arena y
@@ -96,7 +102,7 @@ struct Arena{
 };
 
 template<typename T> T* Arena::alocar()
-requires con_constructor_por_defecto<T>{
+requires utiles::genericos::con_constructor_por_defecto<T>{
     size_t tamaño = sizeof(T);
     size_t alineado = alignof(T);
 
@@ -127,12 +133,16 @@ template<typename T, typename... Args> T* Arena::alocar(Args&&... argumentos){
     void * pa = alocar(tamaño,alineado);
     return new(pa) T(std::forward<Args>(argumentos)...);
 };
+}
 #endif
 
 #ifndef ARENAS_IMPL
 #define ARENAS_IMPL
 #include <memory>
 #include <new>
+
+namespace memoria {
+
 
 Arena::Arena(size_t capacidad) : capacidad(capacidad), ocupado(0), siguiente(nullptr) {
     data = static_cast<char*>(malloc(this->capacidad));
@@ -225,6 +235,6 @@ bool Arena::puedeAlocar(size_t tamaño) noexcept {
 size_t Arena::alinearMax(size_t n, size_t alineado){
     return  (n + alineado -1) & ~(alineado - 1);
 }
-
+}
 
 #endif

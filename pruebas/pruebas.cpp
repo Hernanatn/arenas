@@ -4,6 +4,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
 
+using namespace memoria;
+
 TEST_CASE("Prueba de creación y destrucción de una arena", "[Arena]") {
     size_t capacidad = 4096;
     Arena arena(capacidad);
