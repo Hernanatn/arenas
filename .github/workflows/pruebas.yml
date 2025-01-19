@@ -6,11 +6,13 @@ on:
     paths:
       - '**.hpp'
       - '**.cpp'
+      - 'pruebas.yml'
   pull_request:
     branches: [ main ]
     paths:
       - '**.hpp'
       - '**.cpp'
+      - 'pruebas.yml'
 
 jobs:
   construir-y-probar:
@@ -45,7 +47,7 @@ jobs:
       id: ejecutar_pruebas
       run: |
         $BUILD_DIR="build/win"
-        $BUILD_DIR\pruebas.exe -s
+        $BUILD_DIR/pruebas.exe -s
 
     - name: Publicar Resultados de Pruebas (en caso de fallos)
       if: failure()
