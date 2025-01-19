@@ -6,13 +6,13 @@ on:
     paths:
       - '**.hpp'
       - '**.cpp'
-      - 'pruebas.yml'
+      - '**pruebas.yml'
   pull_request:
     branches: [ main ]
     paths:
       - '**.hpp'
       - '**.cpp'
-      - 'pruebas.yml'
+      - '**pruebas.yml'
 
 jobs:
   construir-y-probar:
