@@ -1,3 +1,6 @@
 [submodule "externos/Catch2"]
 	path = externos/Catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "externos/utiles.cpp"]
+	path = externos/utiles.cpp
+	url = https://github.com/Hernanatn/utiles.cpp
