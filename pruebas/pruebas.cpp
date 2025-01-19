@@ -54,7 +54,6 @@ TEST_CASE("Prueba de múltiples asignaciones", "[Arena]") {
     }
 }
 
-
 TEST_CASE("Prueba de liberar memoria en la arena", "[Arena]") {
     size_t capacidad = 1024;
     Arena arena(capacidad);
