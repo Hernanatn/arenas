@@ -21,6 +21,6 @@ cmake --build $BUILD_DIR
 rm -f "pruebas/pruebas"
 mv "$BUILD_DIR/correr_pruebas" "pruebas/pruebas"
 
-if [ "$correr" = true ]; then
+if [ "$correr" = true ]; 4
     valgrind --leak-check=full --show-leak-kinds=all ./pruebas/pruebas -s
 fi

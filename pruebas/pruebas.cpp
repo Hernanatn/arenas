@@ -262,6 +262,10 @@ TEST_CASE("Prueba con tipos personalizados", "[Arena][TiposPersonalizados]") {
         auto* objeto1 = arena.alocar<TipoConConstructorPorDefecto>();
         auto* objeto2 = arena.alocar<TipoSinConstructorPorDefecto>(99, 1.23);
         REQUIRE(objeto1 != nullptr);
+        REQUIRE(objeto1->x == 0);
+        REQUIRE(objeto1->y == 0.0);
+        REQUIRE(objeto2->x == 99);
+        REQUIRE(objeto2->y == 1.23);
         REQUIRE(objeto2 != nullptr);
 
         arena.liberar();
