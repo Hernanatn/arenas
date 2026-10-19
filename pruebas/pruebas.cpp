@@ -275,3 +275,33 @@ TEST_CASE("Prueba con tipos personalizados", "[Arena][TiposPersonalizados]") {
         REQUIRE(nuevoObjeto == objeto1); // Debe reutilizar la memoria
     }
 }
+
+/****************************************************************
+ *            liberar() conserva las páginas; dos unidades      *
+ ***************************************************************/
+
+int asignarEnOtraUnidad(Arena &arena, int valor);
+
+TEST_CASE("liberar() reinicia y reutiliza las páginas adicionales", "[Arena][Fugas][liberar]") {
+    Arena arena(4096);
+    // Dos páginas: la primera (4096) queda detrás de la nueva.
+    void *primeraVieja = arena.alocar(3000, 8);
+    void *primeraNueva = arena.alocar(3000, 8);
+    REQUIRE(primeraVieja != primeraNueva);
+
+    arena.liberar();
+    // La página nueva vuelve a empezar desde su comienzo...
+    void *a = arena.alocar(3000, 8);
+    REQUIRE(a == primeraNueva);
+    void *b = arena.alocar(3000, 8);
+    REQUIRE(b != nullptr);
+    // ...y cuando no entra más ahí, se reusa la vieja, sin pedir memoria nueva.
+    // Antes, liberar() desenganchaba la vieja (y la perdía): esta asignación creaba otra página.
+    void *c = arena.alocar(3000, 8);
+    REQUIRE(c == primeraVieja);
+}
+
+TEST_CASE("El encabezado en dos unidades de traducción", "[Arena][ODR]") {
+    Arena arena(256);
+    REQUIRE(asignarEnOtraUnidad(arena, 7) == 7);
+}
