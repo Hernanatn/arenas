@@ -20,7 +20,8 @@ target_include_directories(arenas++ INTERFACE ${UTILES_DIR}/fuente)
 
 
 enable_testing()
-add_executable(correr_pruebas pruebas/pruebas.cpp)
+# otra_unidad.cpp: una segunda unidad que incluye el encabezado (definiciones múltiples al enlazar).
+add_executable(correr_pruebas pruebas/pruebas.cpp pruebas/otra_unidad.cpp)
 target_include_directories(correr_pruebas PRIVATE ${CATCH2_DIR}/src)
 target_link_libraries(correr_pruebas PRIVATE arenas++ Catch2::Catch2WithMain)
 
