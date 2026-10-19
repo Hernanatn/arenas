@@ -29,7 +29,7 @@ public:
    * @param alineado Alineación de la memoria.
    * @return Puntero a la memoria asignada.
    */
-  void *alocar(size_t tamaño, size_t alineado);
+  void *alocar(size_t tamaño, size_t alineado = alignof(std::max_align_t));
 
   /**
    * @brief Asigna memoria para un objeto del tipo T y asegura el alineamiento.
@@ -62,6 +62,8 @@ public:
 
   /**
    * @brief Resetea la arena, marca la memoria asignada como sobrescribible.
+   *        Las páginas adicionales se conservan (y se reinician): la próxima
+   *        ronda de asignaciones las reutiliza sin volver a pedir memoria.
    */
   void liberar();
 
@@ -141,9 +143,11 @@ template <typename T, typename... Args> T *Arena::alocar(Args &&...argumentos) {
 #include <memory>
 #include <new>
 
+// Definiciones en el encabezado: todas `inline`, para que dos unidades de
+// traducción que lo incluyen no choquen al enlazar (definición múltiple).
 namespace memoria {
 
-Arena::Arena(size_t capacidad)
+inline Arena::Arena(size_t capacidad)
     : capacidad(capacidad), ocupado(0), siguiente(nullptr) {
   data = static_cast<char *>(malloc(this->capacidad));
   if (!data) {
@@ -151,7 +155,7 @@ Arena::Arena(size_t capacidad)
   }
 }
 
-Arena::Arena(Arena &&otro) {
+inline Arena::Arena(Arena &&otro) {
   data = otro.data;
   capacidad = otro.capacidad;
   ocupado = otro.ocupado;
@@ -162,7 +166,7 @@ Arena::Arena(Arena &&otro) {
   otro.siguiente = nullptr;
 }
 
-Arena &Arena::operator=(Arena &&otro) {
+inline Arena &Arena::operator=(Arena &&otro) {
   if (this != &otro) {
     this->~Arena();
     new (this) Arena(std::move(otro));
@@ -170,7 +174,7 @@ Arena &Arena::operator=(Arena &&otro) {
   return *this;
 }
 
-Arena::~Arena() {
+inline Arena::~Arena() {
   while (Arena *temp = siguiente) {
     siguiente = std::exchange(siguiente->siguiente, nullptr);
     delete temp;
@@ -185,8 +189,7 @@ Arena::~Arena() {
   ocupado = 0;
 };
 
-void *Arena::alocar(size_t tamaño,
-                    size_t alineado = alignof(std::max_align_t)) {
+inline void *Arena::alocar(size_t tamaño, size_t alineado) {
   size_t espacio = this->espacio();
   void *p = &this->data[this->ocupado];
   void *pa = std::align(alineado, tamaño, p, espacio);
@@ -205,15 +208,15 @@ void *Arena::alocar(size_t tamaño,
   return pa;
 }
 
-void Arena::liberar() {
-  while (Arena *temp = siguiente) {
-    siguiente = std::exchange(siguiente->siguiente, nullptr);
-    temp->liberar();
+// Antes desenganchaba cada página de la lista y no la borraba: se perdían (fuga)
+// y la arena volvía a pedir memoria. Ahora se reinician en su lugar.
+inline void Arena::liberar() {
+  for (Arena *pagina = this; pagina != nullptr; pagina = pagina->siguiente) {
+    pagina->ocupado = 0;
   }
-  this->ocupado = 0;
 };
 
-void Arena::nuevaPagina(size_t capacidad) {
+inline void Arena::nuevaPagina(size_t capacidad) {
   Arena *vieja = new Arena(std::move(*this));
 
   this->data = static_cast<char *>(malloc(capacidad));
@@ -227,13 +230,13 @@ void Arena::nuevaPagina(size_t capacidad) {
   this->siguiente = vieja;
 }
 
-size_t Arena::espacio() const noexcept { return capacidad - ocupado; }
+inline size_t Arena::espacio() const noexcept { return capacidad - ocupado; }
 
-bool Arena::puedeAlocar(size_t tamaño) noexcept {
+inline bool Arena::puedeAlocar(size_t tamaño) noexcept {
   return espacio() >= tamaño || (siguiente && siguiente->puedeAlocar(tamaño));
 }
 
-size_t Arena::alinearMax(size_t n, size_t alineado) {
+inline size_t Arena::alinearMax(size_t n, size_t alineado) {
   return (n + alineado - 1) & ~(alineado - 1);
 }
 } // namespace memoria
